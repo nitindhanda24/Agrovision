@@ -14,6 +14,13 @@ connectDB();
 app.set("trust proxy", 1);
 
 const clientUrl = getRequiredEnv("CLIENT_URL", "http://localhost:3000");
+const allowedOrigins = Array.from(new Set([
+  ...clientUrl.split(",").map((origin) => origin.trim()).filter(Boolean),
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5173"
+]));
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
@@ -27,10 +34,14 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-const cors = require("cors");
-
 app.use(cors({
-  origin: "https://agrovision-git-main-nitindhanda24s-projects.vercel.app",
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true
 }));
 
@@ -43,6 +54,13 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
   res.json({ message: "AgroVision API is running" });
+});
+
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    message: "AgroVision API is healthy"
+  });
 });
 
 app.use("/api/auth", authLimiter);
