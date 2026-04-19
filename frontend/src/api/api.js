@@ -1,7 +1,21 @@
 import axios from "axios";
 
+function resolveApiBaseUrl() {
+  const configured = String(import.meta.env.VITE_API_URL || "").trim();
+
+  if (!configured) {
+    return "/api";
+  }
+
+  if (configured.startsWith("http://") || configured.startsWith("https://")) {
+    return configured.replace(/\/+$/, "");
+  }
+
+  return `/${configured.replace(/^\/+|\/+$/g, "")}`;
+}
+
 export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api"
+  baseURL: resolveApiBaseUrl()
 });
 
 API.interceptors.request.use((config) => {
