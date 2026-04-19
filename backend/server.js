@@ -27,10 +27,13 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
+const cors = require("cors");
+
 app.use(cors({
-  origin: clientUrl,
+  origin: "https://agrovision-git-main-nitindhanda24s-projects.vercel.app",
   credentials: true
 }));
+
 app.use(helmet({
   crossOriginResourcePolicy: false
 }));
