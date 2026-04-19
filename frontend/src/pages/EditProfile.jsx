@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API, getErrorMessage } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { setStoredValue } from "../utils/storage";
 
 export default function EditProfile({ navigate, path }) {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -36,7 +37,7 @@ export default function EditProfile({ navigate, path }) {
       const payload = { name: form.name, email: form.email };
       if (form.password.trim()) payload.password = form.password;
       const res = await API.put("/auth/profile", payload);
-      localStorage.setItem("name", res.data.name);
+      setStoredValue("name", res.data.name);
       setForm((prev) => ({ ...prev, password: "" }));
       setMessage("Profile updated");
     } catch (err) {

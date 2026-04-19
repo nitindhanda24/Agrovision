@@ -10,6 +10,7 @@ import Orders from "./pages/Orders";
 import Chat from "./pages/Chat";
 import EditProfile from "./pages/EditProfile";
 import { useEffect, useState } from "react";
+import { getStoredValue } from "./utils/storage";
 
 const routes = {
   "/farmer-dashboard": Dashboard,
@@ -39,7 +40,7 @@ function App() {
     setPath(nextPath);
   };
 
-  const role = localStorage.getItem("role");
+  const role = getStoredValue("role");
   const isPublicPath = path === "/login" || path === "/register";
   const roleHome = roleDashboardPath[role];
 

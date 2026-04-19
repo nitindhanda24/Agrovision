@@ -1,9 +1,11 @@
+import { clearStoredSession, getStoredValue } from "../utils/storage";
+
 export default function Navbar({ navigate }) {
-  const name = localStorage.getItem("name");
-  const role = localStorage.getItem("role");
+  const name = getStoredValue("name");
+  const role = getStoredValue("role");
 
   const logout = () => {
-    localStorage.clear();
+    clearStoredSession();
     if (navigate) navigate("/login");
     else window.location.href = "/login";
   };

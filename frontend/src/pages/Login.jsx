@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { API, getErrorMessage } from "../api/api";
+import { getStoredValue, setStoredValue } from "../utils/storage";
 
 const roleDashboardPath = {
   farmer: "/farmer-dashboard",
@@ -7,7 +8,7 @@ const roleDashboardPath = {
 };
 
 export default function Login({ navigate }) {
-  const savedRole = localStorage.getItem("authRoleIntent");
+  const savedRole = getStoredValue("authRoleIntent");
   const [role, setRole] = useState(savedRole === "trader" ? "trader" : "farmer");
   const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -24,10 +25,10 @@ export default function Login({ navigate }) {
         setError(`This account is ${res.data.role}. Please choose ${res.data.role} login.`);
         return;
       }
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userId", res.data.id);
-      localStorage.setItem("role", res.data.role);
-      localStorage.setItem("name", res.data.name);
+      setStoredValue("token", res.data.token);
+      setStoredValue("userId", res.data.id);
+      setStoredValue("role", res.data.role);
+      setStoredValue("name", res.data.name);
       navigate(roleDashboardPath[res.data.role] || "/login");
     } catch (err) {
       setError(getErrorMessage(err, "Login failed"));
@@ -49,7 +50,7 @@ export default function Login({ navigate }) {
         <input placeholder="Email" value={data.email} onChange={e => setData({...data,email:e.target.value})}/>
         <input type="password" placeholder="Password" value={data.password} onChange={e => setData({...data,password:e.target.value})}/>
         <button type="submit" disabled={submitting}>{submitting ? `Logging in as ${role}...` : `Login as ${role}`}</button>
-        <p className="muted">New user? <button type="button" className="link-btn" onClick={() => { localStorage.setItem("authRoleIntent", role); navigate("/register"); }}>Create {role} account</button></p>
+        <p className="muted">New user? <button type="button" className="link-btn" onClick={() => { setStoredValue("authRoleIntent", role); navigate("/register"); }}>Create {role} account</button></p>
       </form>
     </main>
   );

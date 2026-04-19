@@ -1,3 +1,5 @@
+import { getStoredValue } from "../utils/storage";
+
 const sectionsByRole = {
   farmer: [
     {
@@ -33,7 +35,7 @@ const sectionsByRole = {
 };
 
 export default function Sidebar({ path = "/", navigate = () => {} }) {
-  const role = localStorage.getItem("role");
+  const role = getStoredValue("role");
   const sections = sectionsByRole[role] || [];
 
   return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { API, getErrorMessage } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { getStoredValue } from "../utils/storage";
 
 export default function AddProduct({ navigate, path }) {
   const [data, setData] = useState({
@@ -29,7 +30,7 @@ export default function AddProduct({ navigate, path }) {
       setSubmitting(true);
       await API.post("/products", {
         ...data,
-        farmerId: localStorage.getItem("userId")
+        farmerId: getStoredValue("userId")
       });
       setData({
         name: "",
@@ -57,7 +58,7 @@ export default function AddProduct({ navigate, path }) {
         <main className="page">
           <h2>Add New Crop Listing</h2>
           <p className="muted">Create marketplace-ready crop cards with status and health indicators.</p>
-          {localStorage.getItem("role") !== "farmer" ? (
+          {getStoredValue("role") !== "farmer" ? (
             <div className="panel">Only farmers can add crops.</div>
           ) : (
             <form className="panel" onSubmit={submit}>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { API, getErrorMessage } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { getStoredValue, removeStoredValue } from "../utils/storage";
 
 const mandiOptions = [
   "Pune APMC",
@@ -12,7 +13,7 @@ const mandiOptions = [
 ];
 
 export default function TraderDashboard({ navigate, path }) {
-  const userId = localStorage.getItem("userId");
+  const userId = getStoredValue("userId");
   const [requests, setRequests] = useState([]);
   const [form, setForm] = useState({
     cropName: "",
@@ -124,7 +125,7 @@ export default function TraderDashboard({ navigate, path }) {
   };
 
   useEffect(() => {
-    const editingRequestId = localStorage.getItem("traderEditingRequestId");
+    const editingRequestId = getStoredValue("traderEditingRequestId");
     if (!editingRequestId || myRequests.length === 0) return;
 
     const requestToEdit = myRequests.find((request) => request._id === editingRequestId);
@@ -132,7 +133,7 @@ export default function TraderDashboard({ navigate, path }) {
       startEdit(requestToEdit);
     }
 
-    localStorage.removeItem("traderEditingRequestId");
+    removeStoredValue("traderEditingRequestId");
   }, [myRequests]);
 
   return (

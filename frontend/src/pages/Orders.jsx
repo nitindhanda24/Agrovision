@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { API, getErrorMessage, resolveImageUrl } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { getStoredValue, setStoredValue } from "../utils/storage";
 
 export default function Orders({ navigate, path }) {
   const [orders, setOrders] = useState([]);
@@ -11,8 +12,8 @@ export default function Orders({ navigate, path }) {
   const [requestLoading, setRequestLoading] = useState(false);
   const [filters, setFilters] = useState({ status: "all", q: "" });
   const [appliedFilters, setAppliedFilters] = useState({ status: "all", q: "" });
-  const role = localStorage.getItem("role");
-  const userId = localStorage.getItem("userId");
+  const role = getStoredValue("role");
+  const userId = getStoredValue("userId");
 
   const loadOrders = async () => {
     setLoading(true);
@@ -132,7 +133,7 @@ export default function Orders({ navigate, path }) {
   }, [visibleRequests]);
 
   const openRequestEditor = (requestId) => {
-    localStorage.setItem("traderEditingRequestId", requestId);
+    setStoredValue("traderEditingRequestId", requestId);
     navigate("/trader-dashboard");
   };
 

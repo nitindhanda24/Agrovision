@@ -3,11 +3,12 @@ import { API, getErrorMessage } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import CropListingSection from "../components/CropListingSection";
+import { getStoredValue } from "../utils/storage";
 
 export default function CropListings({ navigate, path }) {
-  const role = localStorage.getItem("role");
+  const role = getStoredValue("role");
   const isTrader = role === "trader";
-  const userId = localStorage.getItem("userId");
+  const userId = getStoredValue("userId");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

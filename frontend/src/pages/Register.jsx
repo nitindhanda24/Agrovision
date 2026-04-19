@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { API, getErrorMessage } from "../api/api";
+import { getStoredValue, setStoredValue } from "../utils/storage";
 
 export default function Register({ navigate }) {
-  const initialRole = localStorage.getItem("authRoleIntent") === "trader" ? "trader" : "farmer";
+  const initialRole = getStoredValue("authRoleIntent") === "trader" ? "trader" : "farmer";
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -41,7 +42,7 @@ export default function Register({ navigate }) {
         <input placeholder="Email" value={data.email} onChange={e => setData({...data,email:e.target.value})}/>
         <input type="password" placeholder="Password" value={data.password} onChange={e => setData({...data,password:e.target.value})}/>
         <button type="submit" disabled={submitting}>{submitting ? `Creating ${data.role} account...` : `Register as ${data.role}`}</button>
-        <p className="muted">Already registered? <button type="button" className="link-btn" onClick={() => { localStorage.setItem("authRoleIntent", data.role); navigate("/login"); }}>Login as {data.role}</button></p>
+        <p className="muted">Already registered? <button type="button" className="link-btn" onClick={() => { setStoredValue("authRoleIntent", data.role); navigate("/login"); }}>Login as {data.role}</button></p>
       </form>
     </main>
   );

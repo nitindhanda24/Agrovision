@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { API, getErrorMessage } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { getStoredValue } from "../utils/storage";
 
 export default function Chat({ navigate, path }) {
   const [msg, setMsg] = useState("");
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
-  const userId = localStorage.getItem("userId");
+  const userId = getStoredValue("userId");
 
   const loadChat = async () => {
     try {
