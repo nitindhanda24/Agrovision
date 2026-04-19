@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getStoredValue } from "../utils/storage";
 
 function resolveApiBaseUrl() {
   const configured = String(import.meta.env.VITE_API_URL || "").trim();
@@ -8,10 +9,41 @@ function resolveApiBaseUrl() {
   }
 
   if (configured.startsWith("http://") || configured.startsWith("https://")) {
-    return configured.replace(/\/+$/, "");
+    const normalized = configured.replace(/\/+$/, "");
+
+    try {
+      const url = new URL(normalized);
+      const pathname = url.pathname.replace(/\/+$/, "");
+
+      if (!pathname || pathname === "/") {
+        return `${url.origin}/api`;
+      }
+
+      return normalized;
+    } catch {
+      return normalized;
+    }
   }
 
   return `/${configured.replace(/^\/+|\/+$/g, "")}`;
+}
+
+function getApiOrigin() {
+  const baseUrl = resolveApiBaseUrl();
+
+  if (baseUrl.startsWith("http://") || baseUrl.startsWith("https://")) {
+    try {
+      return new URL(baseUrl).origin;
+    } catch {
+      return "";
+    }
+  }
+
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return "";
 }
 
 export const API = axios.create({
@@ -19,7 +51,7 @@ export const API = axios.create({
 });
 
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = getStoredValue("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -35,5 +67,13 @@ export function getErrorMessage(error, fallbackMessage) {
 export function resolveImageUrl(imageUrl) {
   if (!imageUrl) return "";
   if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) return imageUrl;
-  return imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`;
+
+  const normalizedPath = imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`;
+  const apiOrigin = getApiOrigin();
+
+  if (!apiOrigin) {
+    return normalizedPath;
+  }
+
+  return `${apiOrigin}${normalizedPath}`;
 }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { API, getErrorMessage } from "../api/api";
+import { API, getErrorMessage, resolveImageUrl } from "../api/api";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { getStoredValue } from "../utils/storage";
 import ProductCard from "../components/ProductCard";
 
 export default function Browse({ navigate, path }) {
@@ -18,7 +19,7 @@ export default function Browse({ navigate, path }) {
     mandi: "all",
     cropType: "all"
   });
-  const role = localStorage.getItem("role");
+  const role = getStoredValue("role");
 
   const loadProducts = async () => {
     setLoading(true);
@@ -38,7 +39,7 @@ export default function Browse({ navigate, path }) {
   }, []);
 
   const requestOrder = (product) => {
-    const traderId = localStorage.getItem("userId");
+    const traderId = getStoredValue("userId");
 
     if (!traderId) {
       navigate("/login");
@@ -56,7 +57,7 @@ export default function Browse({ navigate, path }) {
       return;
     }
 
-    const traderId = localStorage.getItem("userId");
+    const traderId = getStoredValue("userId");
 
     try {
       setSubmittingOrder(true);
@@ -172,7 +173,7 @@ export default function Browse({ navigate, path }) {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>Request Order</h3>
             <div className="product-preview">
-              <img src={selectedProduct.imageUrl || "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=1000&q=60"} alt={selectedProduct.name} />
+              <img src={resolveImageUrl(selectedProduct.imageUrl) || "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=1000&q=60"} alt={selectedProduct.name} />
               <div>
                 <h4>{selectedProduct.name}</h4>
                 <p className="muted">{selectedProduct.cropType || "grains"}</p>

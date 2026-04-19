@@ -1,7 +1,9 @@
+import { resolveImageUrl } from "../api/api";
+
 export default function ProductCard({ p, order, canOrder }) {
   const statusClass = `tag ${p.status || "approved"}`;
   const healthClass = `tag ${p.health || "healthy"}`;
-  const image = p.imageUrl || "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=1000&q=60";
+  const image = resolveImageUrl(p.imageUrl) || "https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=1000&q=60";
 
   return (
     <div className="product crop-card">
