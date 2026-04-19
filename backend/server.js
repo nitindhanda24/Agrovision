@@ -27,13 +27,10 @@ const authLimiter = rateLimit({
   legacyHeaders: false
 });
 
-const cors = require("cors");
-
 app.use(cors({
-  origin: "https://agrovision-flame.vercel.app", // ✅ FULL URL
+  origin: clientUrl,
   credentials: true
 }));
-
 app.use(helmet({
   crossOriginResourcePolicy: false
 }));
