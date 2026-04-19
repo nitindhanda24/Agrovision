@@ -328,9 +328,6 @@ textarea::placeholder {
   gap: 16px;
   justify-content: space-between;
   padding: 16px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
   box-shadow: 0 12px 30px rgba(39, 63, 49, 0.06);
 }
 
